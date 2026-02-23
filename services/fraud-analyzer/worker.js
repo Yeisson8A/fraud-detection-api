@@ -10,6 +10,21 @@ const consumer = kafka.consumer({ groupId: GROUPS.ANALYZER_GROUP });
 const producer = kafka.producer();
 
 const run = async () => {
+  let connected = false;
+  
+  // Bucle de reintento para la conexión inicial
+  while (!connected) {
+    try {
+      await consumer.connect();
+      await producer.connect();
+      console.log('✅ [Fraud Analyzer]: Connected to Kafka');
+      connected = true;
+    } catch (err) {
+      console.error('❌ [Kafka]: Connection failed, retrying in 5 seconds...', err.message);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+  }
+
   // 1. Conectar consumidor y productor
   await consumer.connect();
   await producer.connect();

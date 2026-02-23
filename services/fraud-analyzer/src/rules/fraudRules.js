@@ -1,4 +1,4 @@
-const { STATUS } = require('../../../shared/constants');
+const { STATUS } = require('../../../../shared/constants');
 
 /**
  * Motor de reglas de fraude

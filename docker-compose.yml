@@ -4,6 +4,7 @@ services:
   # Zookeeper: Coordinador de Kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -11,6 +12,7 @@ services:
   # Kafka Broker: El corazón del sistema
   kafka:
     image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
@@ -18,12 +20,16 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      # Definimos dos listeners: uno para tu PC (localhost) y otro para los contenedores (kafka)
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   # UI para Kafka: Para que puedas ver los mensajes visualmente
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
     ports:
       - "8080:8080"
     environment:
@@ -33,12 +39,14 @@ services:
   # Redis: Para análisis de frecuencia (ej. 5 transacciones en 1 minuto)
   redis:
     image: redis:alpine
+    container_name: redis
     ports:
       - "6379:6379"
 
   # MongoDB: Para guardar el histórico de transacciones procesadas
   mongodb:
     image: mongo:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
@@ -49,6 +57,7 @@ services:
     build: 
       context: .
       dockerfile: services/producer-api/Dockerfile
+    container_name: producer-api
     env_file:
       - .env
     ports:
@@ -61,6 +70,7 @@ services:
     build:
       context: .
       dockerfile: services/fraud-analyzer/Dockerfile
+    container_name: fraud-analyzer
     env_file:
       - .env
     depends_on:
@@ -73,6 +83,7 @@ services:
     build:
       context: .
       dockerfile: services/notification-service/Dockerfile
+    container_name: notification-service
     env_file: .env
     depends_on:
       - kafka

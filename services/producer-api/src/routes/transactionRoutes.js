@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid'); // Para generar IDs únicos
-const kafka = require('../../../shared/kafka-client');
-const { TOPICS, STATUS } = require('../../../shared/constants');
-const { transactionSchema } = require('../../../shared/schemas/transaction');
+const kafka = require('../../../../shared/kafka-client');
+const { TOPICS, STATUS } = require('../../../../shared/constants');
+const { transactionSchema } = require('../../../../shared/schemas/transaction');
 const { sendTransactionEvent } = require('../kafka/producer');
 
 // Inicializamos el productor de Kafka
