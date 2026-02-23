@@ -36,7 +36,7 @@ El sistema se divide en cuatro componentes principales que se comunican de forma
 ## **Requisitos Previos**
 
 - Docker y Docker Compose
-- Dataset de Kaggle descargado: `https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud`.
+- Dataset de Kaggle descargado: https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 - Crear carpeta `data` en la raiz del proyecto y colocar el archivo `creditcard.csv`
 
 ## **Levantar proyecto** 
