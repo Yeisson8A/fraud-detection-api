@@ -45,9 +45,13 @@ async function ingestData() {
   console.log('\n✅ Ingesta completada con éxito.');
 }
 
-// Verificar si el archivo existe antes de empezar
-if (fs.existsSync(CSV_FILE_PATH)) {
-  ingestData();
-} else {
-  console.error(`❌ Error: No se encontró el archivo en ${CSV_FILE_PATH}`);
+module.exports = { ingestData, API_URL }; // Exportamos para testear
+
+if (require.main === module) {
+  // Verificar si el archivo existe antes de empezar
+  if (fs.existsSync(CSV_FILE_PATH)) {
+    ingestData();
+  } else {
+    console.error(`❌ Error: No se encontró el archivo en ${CSV_FILE_PATH}`);
+  }
 }

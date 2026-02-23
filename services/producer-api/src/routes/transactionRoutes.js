@@ -9,11 +9,18 @@ const { sendTransactionEvent } = require('../kafka/producer');
 // Inicializamos el productor de Kafka
 const producer = kafka.producer();
 
-const initProducer = async () => {
-  await producer.connect();
-  console.log('✅ Kafka Producer connected');
-};
-initProducer();
+// MODIFICACIÓN AQUÍ: Evita que esto corra en Vitest
+if (process.env.NODE_ENV !== 'test') {
+  const initProducer = async () => {
+    try {
+      await producer.connect();
+      console.log('✅ Kafka Producer connected');
+    } catch (err) {
+      console.error('❌ Failed to connect producer:', err);
+    }
+  };
+  initProducer();
+}
 
 router.post('/', async (req, res) => {
   try {
